@@ -36,6 +36,16 @@ function priv_fpcdebug
 function priv_main
 (
     set -euo pipefail
+    if ! (which lazbuild); then
+        source '/etc/os-release'
+        case ${ID:?} in
+            debian | ubuntu)
+                printf '\x1b[32mInstall Lazarus.\x1b[0m\n' 1>&2
+                sudo apt-get update
+                sudo apt-get install -y lazarus{-ide-qt5,}
+                ;;
+        esac
+    fi
     if ((${#})); then
         case ${1} in
             build) priv_fpcbuild ;;
